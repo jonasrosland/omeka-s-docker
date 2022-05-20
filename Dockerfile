@@ -1,4 +1,4 @@
-FROM php:8.1.2-apache-buster
+FROM jonasrosland/php-8.1.2-apache-bullseye
 
 # Omeka-S web publishing platform for digital heritage collections (https://omeka.org/s/)
 # Previous maintainers: Oldrich Vykydal (o1da) - Klokan Technologies GmbH  / Eric Dodemont <eric.dodemont@skynet.be>
@@ -22,11 +22,12 @@ RUN apt-get -qq update && apt-get -qq -y --no-install-recommends install \
     wget \
     ghostscript \
     poppler-utils \
-    libsodium-dev
+    libsodium-dev \
+    libdb-dev
 
 # Install the PHP extensions we need
 RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/
-RUN docker-php-ext-install -j$(nproc) iconv pdo pdo_mysql mysqli gd
+RUN docker-php-ext-install -j$(nproc) iconv pdo pdo_mysql mysqli gd dba
 RUN yes | pecl install imagick && docker-php-ext-enable imagick 
 
 # Add the Omeka-S PHP code
